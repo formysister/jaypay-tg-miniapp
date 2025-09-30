@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
-import { ArrowLeft, Users, Award, Calendar, Phone } from 'lucide-react';
+import { ArrowLeft, Users, Award, Calendar, Phone, Trash2 } from 'lucide-react';
 import { apiClient } from '../(utils)/api';
 
 interface AdminUser {
@@ -24,6 +24,13 @@ interface AdminStats {
     totalUsers: number;
     activeUsers: number;
     totalRewards: number;
+    usersWithPins: number;
+}
+
+interface AdminStats {
+    totalUsers: number;
+    activeUsers: number;
+    totalRewards: number;
 }
 
 interface AdminPageProps {
@@ -35,6 +42,7 @@ export function AdminPage({ onBack }: AdminPageProps) {
     const [stats, setStats] = useState<AdminStats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
     useEffect(() => {
         const loadAdminData = async () => {
@@ -47,7 +55,8 @@ export function AdminPage({ onBack }: AdminPageProps) {
                     setStats({
                         totalUsers: response.totalUsers,
                         activeUsers: response.activeUsers,
-                        totalRewards: response.totalRewards
+                        totalRewards: response.totalRewards,
+                        usersWithPins: response.users.filter((u: AdminUser) => u.hasPinSet).length
                     });
                 } else {
                     throw new Error('Failed to load admin data');
@@ -62,6 +71,38 @@ export function AdminPage({ onBack }: AdminPageProps) {
 
         loadAdminData();
     }, []);
+
+    const handleDeleteUser = async (userId: string, userPhone: string) => {
+        if (!confirm(`Are you sure you want to delete user ${userPhone}? This action cannot be undone.`)) {
+            return;
+        }
+
+        setDeletingUserId(userId);
+        try {
+            await apiClient.deleteUser(userId);
+
+            // Remove user from local state
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+
+            // Update stats
+            setStats(prevStats => {
+                if (!prevStats) return null;
+                const deletedUser = users.find(u => u.id === userId);
+                return {
+                    ...prevStats,
+                    totalUsers: prevStats.totalUsers - 1,
+                    activeUsers: deletedUser?.isActive ? prevStats.activeUsers - 1 : prevStats.activeUsers,
+                    usersWithPins: deletedUser?.hasPinSet ? prevStats.usersWithPins - 1 : prevStats.usersWithPins,
+                };
+            });
+
+        } catch (error) {
+            console.error('Delete user error:', error);
+            setError(error instanceof Error ? error.message : 'Failed to delete user');
+        } finally {
+            setDeletingUserId(null);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -116,7 +157,7 @@ export function AdminPage({ onBack }: AdminPageProps) {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <Card>
                         <CardContent className="p-6">
                             <div className="flex items-center space-x-4">
@@ -158,6 +199,20 @@ export function AdminPage({ onBack }: AdminPageProps) {
                             </div>
                         </CardContent>
                     </Card>
+
+                    <Card>
+                        <CardContent className="p-6">
+                            <div className="flex items-center space-x-4">
+                                {/* <div className="p-3 bg-purple-100 rounded-full">
+                                    <Clock className="w-6 h-6 text-purple-600" />
+                                </div> */}
+                                <div>
+                                    <p className="text-2xl">{stats?.usersWithPins || 0}</p>
+                                    <p className="text-sm text-gray-600">Users with PINs</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 {/* Users Table */}
@@ -181,6 +236,7 @@ export function AdminPage({ onBack }: AdminPageProps) {
                                         <TableHead>Last Login</TableHead>
                                         <TableHead>Rewards</TableHead>
                                         <TableHead>Status</TableHead>
+                                        <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -237,6 +293,21 @@ export function AdminPage({ onBack }: AdminPageProps) {
                                                 >
                                                     {user.isActive ? 'Active' : 'Inactive'}
                                                 </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleDeleteUser(user.id, user.phone)}
+                                                    disabled={deletingUserId === user.id}
+                                                    className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                                                >
+                                                    {deletingUserId === user.id ? (
+                                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                                                    ) : (
+                                                        <Trash2 className="w-4 h-4" />
+                                                    )}
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}

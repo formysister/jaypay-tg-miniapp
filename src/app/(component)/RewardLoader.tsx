@@ -60,7 +60,7 @@ export function RewardLoader({ onComplete }: RewardLoaderProps) {
                         </div>
 
                         <h2 className="text-2xl mb-2 text-green-600">Reward Collected!</h2>
-                        <p className="text-gray-600">+50 points added to your account</p>
+                        <p className="text-gray-600">999 RS added to your account</p>
                     </CardContent>
                 </Card>
             </div>

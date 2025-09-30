@@ -63,6 +63,12 @@ class ApiClient {
         return this.request('/admin/users');
     }
 
+    async deleteUser(userId: string) {
+        return this.request(`/admin/users/${encodeURIComponent(userId)}`, {
+            method: 'DELETE',
+        });
+    }
+
     async healthCheck() {
         return this.request('/health');
     }
