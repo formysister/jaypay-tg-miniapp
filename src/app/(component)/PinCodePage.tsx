@@ -110,7 +110,9 @@ export function PinCodePage({ onPinVerify, onBack, error }: PinCodePageProps) {
                             {pin.map((digit, index) => (
                                 <input
                                     key={index}
-                                    ref={(el: any) => (inputRefs.current[index] = el)}
+                                    ref={(el: HTMLInputElement | null) => {
+                                        inputRefs.current[index] = el;
+                                    }}
                                     type="text"
                                     inputMode="numeric"
                                     maxLength={1}
