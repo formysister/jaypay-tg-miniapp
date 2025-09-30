@@ -15,7 +15,6 @@ export function PinCodePage({ onPinVerify, onBack, error }: PinCodePageProps) {
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
     useEffect(() => {
-        // Focus on first input when component mounts
         if (inputRefs.current[0]) {
             inputRefs.current[0].focus();
         }
