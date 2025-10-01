@@ -144,7 +144,7 @@ export function LandingPage({ user, onLogout }: LandingPageProps) {
                         </Button>
                     </div>
                 )}
-                <Card className="w-full max-w-md">
+                <Card className="w-full max-w-md bg-[#fff8d2]">
                     <CardHeader className="text-center">
                         <div className="mx-auto mb-4 w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                             <Gift className="w-10 h-10 text-white" />
@@ -174,13 +174,13 @@ export function LandingPage({ user, onLogout }: LandingPageProps) {
 
                 {/* Additional Stats */}
                 <div className="grid grid-cols-2 gap-4 w-full max-w-md">
-                    <Card>
+                    <Card className='bg-[#fff8d2]'>
                         <CardContent className="text-center p-4">
                             <div className="text-2xl mb-1">{userStats?.totalRewards || 0}</div>
                             <div className="text-sm text-gray-600">Day Streak</div>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className='bg-[#fff8d2]'>
                         <CardContent className="text-center p-4">
                             <div className="text-2xl mb-1">{(userStats?.totalRewards || 0) * 50}</div>
                             <div className="text-sm text-gray-600">Total Points</div>
@@ -190,7 +190,7 @@ export function LandingPage({ user, onLogout }: LandingPageProps) {
             </div>
 
             {/* Fixed Bottom Button */}
-            <div className="p-4 bg-white border-t">
+            <div className="p-4 border-t">
                 <div className="max-w-md mx-auto">
                     <Button
                         onClick={handleCollectReward}

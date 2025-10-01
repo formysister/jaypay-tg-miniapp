@@ -81,7 +81,7 @@ export function PinCodePage({ onPinVerify, onBack, error }: PinCodePageProps) {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
-            <Card className="w-full max-w-md">
+            <Card className="w-full max-w-md bg-[#fff8d2]">
                 <CardHeader className="text-center">
                     <Button
                         variant="ghost"
@@ -126,7 +126,7 @@ export function PinCodePage({ onPinVerify, onBack, error }: PinCodePageProps) {
 
                         <Button
                             type="submit"
-                            className="w-full"
+                            className="w-full rounded-xl bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 text-white font-semibold shadow-sm hover:from-orange-500 hover:via-orange-600 hover:to-orange-700 hover:shadow-xl transition-all duration-300 cursor-pointer"
                             disabled={isLoading || pin.join('').length !== 6}
                         >
                             {isLoading ? 'Verifying...' : 'Verify PIN'}

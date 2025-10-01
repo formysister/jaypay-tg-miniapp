@@ -189,3 +189,10 @@
 html {
     font-size: var(--font-size);
 }
+
+.text-outline-black {
+    color: white;
+    -webkit-text-stroke: 1px black;
+    text-stroke: 1px black;
+    /* for broader support */
+}
