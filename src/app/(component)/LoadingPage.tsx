@@ -46,7 +46,7 @@ export function LoginPage({ onLogin, error }: LoginPageProps) {
                         {/* <Send className="w-8 h-8 text-white" /> */}
                         <img src={"/logo.jpg"} className='flex w-full rounded-md' />
                     </div>
-                    <CardTitle className="text-2xl">Welcome to JayPay</CardTitle>
+                    <CardTitle className="text-2xl">Welcome to IPAY</CardTitle>
                     <p className="text-gray-600">Sign in to collect your daily rewards</p>
                 </CardHeader>
                 <CardContent>

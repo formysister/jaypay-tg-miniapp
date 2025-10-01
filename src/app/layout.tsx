@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jay Pay TG App",
+  title: "IPAY TG APP",
   description: "Collect your daily reward here.",
 };
 
